@@ -1,0 +1,30 @@
+{
+  "name": "codesentinel",
+  "version": "1.0.0",
+  "description": "CodeSentinel — AI-powered codebase health agent for Slack",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node --watch app.js",
+    "lint": "eslint **/*.js",
+    "mcp:start": "node mcp-server/index.js"
+  },
+  "dependencies": {
+    "@slack/bolt": "^4.2.0",
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "ts-morph": "^25.0.1",
+    "neo4j-driver": "^5.28.1",
+    "adm-zip": "^0.5.16",
+    "octokit": "^4.1.3",
+    "node-cache": "^5.1.2",
+    "chalk": "^5.4.1"
+  },
+  "devDependencies": {
+    "eslint": "^9.25.1"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

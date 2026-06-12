@@ -1,0 +1,21 @@
+{
+  "name": "analyze_health",
+  "title": "Codebase Health Analysis",
+  "description": "Run a codebase health scan for dead code, circular dependencies, coupling, or architectural drift",
+  "type": "function",
+  "input_parameters": {
+    "type": "object",
+    "properties": {
+      "analysis_type": {
+        "type": "string",
+        "enum": ["dead_code", "circular_deps", "coupling", "drift", "full"],
+        "description": "Type of analysis to run"
+      },
+      "repo_url": {
+        "type": "string",
+        "description": "GitHub or GitLab repository URL (optional, uses workspace context if not provided)"
+      }
+    },
+    "required": ["analysis_type"]
+  }
+}

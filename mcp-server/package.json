@@ -1,0 +1,14 @@
+{
+  "name": "codesentinel-mcp-server",
+  "version": "1.0.0",
+  "description": "CodeSentinel MCP Server — exposes code analysis tools via Model Context Protocol",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "express": "^4.21.2"
+  }
+}

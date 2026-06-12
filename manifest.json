@@ -1,0 +1,70 @@
+{
+  "display_information": {
+    "name": "CodeSentinel",
+    "description": "AI-powered codebase health agent. Detects dead code, circular dependencies, high coupling, and architectural drift — all from Slack.",
+    "background_color": "#1A1A2E",
+    "long_description": "CodeSentinel is an AI-powered Slack agent that keeps your codebase healthy. It analyzes your repository for dead code (unused definitions), circular dependencies between modules, excessive coupling (fan-out metrics), and architectural drift (layer boundary violations). It provides rich visual reports with severity-coded Block Kit UI, trending health scores, and actionable fix suggestions — all surfaced directly inside Slack where your team already works.\n\nTechnologies: Slack AI capabilities, MCP Server integration, Real-Time Search API"
+  },
+  "features": {
+    "bot_user": {
+      "display_name": "CodeSentinel",
+      "always_online": true
+    },
+    "assistant_view": {
+      "assistant_description": "Analyze your codebase for dead code, circular dependencies, coupling issues, and architectural drift. Supports GitHub repo URLs, GitLab projects, and direct code snippets.",
+      "suggested_prompts": [
+        {
+          "title": "Scan for dead code",
+          "message": "Analyze the codebase for dead code — functions, classes, and modules that are defined but never referenced anywhere."
+        },
+        {
+          "title": "Find circular dependencies",
+          "message": "Detect circular dependencies between modules. Show the dependency cycles as a graph."
+        },
+        {
+          "title": "Check coupling metrics",
+          "message": "Run a coupling analysis. Show which modules have the highest fan-out and identify tightly coupled clusters."
+        },
+        {
+          "title": "Full health scan",
+          "message": "Run a complete codebase health scan: dead code, circular deps, coupling, and architectural drift."
+        }
+      ]
+    }
+  },
+  "oauth_config": {
+    "scopes": {
+      "bot": [
+        "assistant:write",
+        "app_mentions:read",
+        "channels:history",
+        "chat:write",
+        "chat:write.public",
+        "groups:history",
+        "im:history",
+        "mpim:history",
+        "files:read",
+        "reactions:write",
+        "links:read"
+      ]
+    }
+  },
+  "settings": {
+    "event_subscriptions": {
+      "request_url": "https://your-domain.com/slack/events",
+      "bot_events": [
+        "assistant_thread_started",
+        "assistant_thread_context_changed",
+        "message.im",
+        "app_mention"
+      ]
+    },
+    "interactivity": {
+      "is_enabled": true,
+      "request_url": "https://your-domain.com/slack/events"
+    },
+    "org_deploy_enabled": false,
+    "socket_mode_enabled": true,
+    "token_rotation_enabled": false
+  }
+}
