@@ -84,6 +84,14 @@ Find circular dependencies in the frontend
 Check coupling metrics in src/services
 ```
 
+### Daytona sandbox scans (optional)
+
+Set `DAYTONA_API_KEY` (and optionally `GITHUB_TOKEN` for private repos). MCP tools and Slack analysis will shallow-clone GitHub URLs in a Daytona VM and return live import-graph findings instead of demo data.
+
+```
+full_health_scan repo_path=https://github.com/org/repo
+```
+
 ### Use in Slack
 
 Add the Slack app manifest, enable Agent Builder, and @CodeHealth in any channel.

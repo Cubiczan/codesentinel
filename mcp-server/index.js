@@ -25,6 +25,7 @@ const { detectDeadCode } = require("../lib/analyzers/dead-code");
 const { detectCircularDeps } = require("../lib/analyzers/circular-deps");
 const { analyzeCoupling } = require("../lib/analyzers/coupling");
 const { detectDrift } = require("../lib/analyzers/drift");
+const { resolveRepo } = require("../lib/mcp-repo");
 
 const server = new McpServer({
   name: "CodeSentinel",
@@ -41,7 +42,8 @@ server.tool(
     include_suggestions: z.boolean().default(true).describe("Whether to include fix suggestions"),
   },
   async ({ repo_path, include_suggestions }) => {
-    const results = detectDeadCode({ url: repo_path });
+    const repoInfo = await resolveRepo(repo_path);
+    const results = detectDeadCode(repoInfo);
     return {
       content: [
         {
@@ -71,7 +73,8 @@ server.tool(
     repo_path: z.string().optional().describe("Path or URL to the repository"),
   },
   async ({ repo_path }) => {
-    const results = detectCircularDeps({ url: repo_path });
+    const repoInfo = await resolveRepo(repo_path);
+    const results = detectCircularDeps(repoInfo);
     return {
       content: [
         {
@@ -100,7 +103,8 @@ server.tool(
     fan_out_threshold: z.number().default(10).describe("Fan-out threshold for flagging modules"),
   },
   async ({ repo_path, fan_out_threshold }) => {
-    const results = analyzeCoupling({ url: repo_path });
+    const repoInfo = await resolveRepo(repo_path);
+    const results = analyzeCoupling(repoInfo);
     return {
       content: [
         {
@@ -132,7 +136,8 @@ server.tool(
       .describe('JSON string defining layer patterns, e.g. {"ui": ["src/components/"], "data": ["src/db/"]}'),
   },
   async ({ repo_path, layers_config }) => {
-    const results = detectDrift({ url: repo_path });
+    const repoInfo = await resolveRepo(repo_path);
+    const results = detectDrift(repoInfo);
     return {
       content: [
         {
@@ -161,11 +166,12 @@ server.tool(
     repo_path: z.string().optional().describe("Path or URL to the repository"),
   },
   async ({ repo_path }) => {
+    const repoInfo = await resolveRepo(repo_path);
     const [deadCode, circularDeps, coupling, drift] = await Promise.all([
-      detectDeadCode({ url: repo_path }),
-      detectCircularDeps({ url: repo_path }),
-      analyzeCoupling({ url: repo_path }),
-      detectDrift({ url: repo_path }),
+      Promise.resolve(detectDeadCode(repoInfo)),
+      Promise.resolve(detectCircularDeps(repoInfo)),
+      Promise.resolve(analyzeCoupling(repoInfo)),
+      Promise.resolve(detectDrift(repoInfo)),
     ]);
 
     const deadCodePenalty = Math.min(deadCode.findings.length * 2, 30);
