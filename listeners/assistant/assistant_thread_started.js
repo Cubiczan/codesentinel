@@ -1,4 +1,4 @@
-const { setSuggestedPrompts } = require("./lib/slack-helpers");
+const { setSuggestedPrompts } = require("../../lib/slack-helpers");
 
 async function handleAssistantThreadStarted(app) {
   app.event("assistant_thread_started", async ({ event, client, logger }) => {

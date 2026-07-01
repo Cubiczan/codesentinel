@@ -28,7 +28,7 @@ async function handleAppMention(app) {
     try {
       const results = await runAnalysis(intent);
       const blocks = buildResponseBlocks(results, intent);
-      await say({ blocks, thread_ts: event.ts });
+      await say({ text: "CodeSentinel analysis results", blocks, thread_ts: event.ts });
     } catch (error) {
       logger.error("Error handling app_mention:", error);
       await say({

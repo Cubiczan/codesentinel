@@ -2,7 +2,7 @@ const { callLLM, LLMUnavailableError } = require("../../lib/llm-provider");
 const { parseAnalysisRequest } = require("../../lib/intent-parser");
 const { runAnalysis } = require("../../lib/analysis-engine");
 const { buildResponseBlocks } = require("../../lib/block-kit-builder");
-const { streamText, updateMessage } = require("./llm-caller");
+const { streamText } = require("./llm-caller");
 const NodeCache = require("node-cache");
 
 const analysisCache = new NodeCache({ stdTTL: 600, checkperiod: 120 });
@@ -37,7 +37,7 @@ async function handleAssistantMessage(app) {
       if (cached) {
         await say({ text: "Using cached results...", thread_ts: threadTs });
         const blocks = buildResponseBlocks(cached.results, cached.intent);
-        await say({ blocks, thread_ts: threadTs });
+        await say({ text: "CodeSentinel analysis results", blocks, thread_ts: threadTs });
         return;
       }
 
@@ -87,7 +87,7 @@ async function handleAssistantMessage(app) {
       } catch (updateErr) {
         // If update fails (too many blocks), post new message
         logger.warn("Message update failed, posting new message", updateErr);
-        await say({ blocks, thread_ts: threadTs });
+        await say({ text: "CodeSentinel analysis results", blocks, thread_ts: threadTs });
       }
 
       // Cache results

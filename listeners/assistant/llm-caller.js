@@ -14,4 +14,4 @@ async function streamText(client, channel, threadTs, text) {
   }
 }
 
-module.exports = { streamText, updateMessage };
+module.exports = { streamText };
