@@ -150,6 +150,10 @@ The live demo workspace is **[codehealthdemo.slack.com](https://codehealthdemo.s
 
 Sandbox configuration:
 
+**Live agent response in the sandbox** — a real `@CodeSentinel` mention in `#general` triggering a Daytona-sandboxed repo scan:
+
+![CodeSentinel responding in #general](docs/sandbox-setup/04-agent-response.png)
+
 | App credentials & App ID | Agent capability enabled | Socket Mode enabled |
 |---|---|---|
 | ![App Basic Information](docs/sandbox-setup/01-app-basic-info.png) | ![Agent enabled](docs/sandbox-setup/02-agent-enabled.png) | ![Socket Mode enabled](docs/sandbox-setup/03-socket-mode.png) |
