@@ -26,6 +26,10 @@ async function handleAppMention(app) {
 
     // Delegate to the main message handler by posting in the thread
     try {
+      await say({
+        text: `🔍 On it! Running a *${intent.type}* analysis${intent.scope && intent.scope !== "full" ? ` on ${intent.scope}` : ""} — live repo scans take a minute or two.`,
+        thread_ts: event.ts,
+      });
       const results = await runAnalysis(intent);
       const blocks = buildResponseBlocks(results, intent);
       await say({ text: "CodeSentinel analysis results", blocks, thread_ts: event.ts });
