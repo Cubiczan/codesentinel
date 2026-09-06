@@ -22,7 +22,7 @@ Dead code, circular dependencies, excessive coupling, and architectural drift ar
 
 ## What CodeHealth MCP Does
 
-6 analysis tools, available in any MCP-compatible client:
+7 analysis tools, available in any MCP-compatible client:
 
 | Tool | What It Finds |
 |------|--------------|
@@ -32,6 +32,7 @@ Dead code, circular dependencies, excessive coupling, and architectural drift ar
 | `detect_architectural_drift` | Layer boundary violations (UI→Data, Business→UI, etc.) |
 | `full_health_scan` | All four analyses + 0–100 health score + prioritized action items |
 | `explain_finding` | AI-powered detailed explanation of any finding |
+| `check_mcp_health` | Remote MCP handshake (`initialize` + `tools/list`), schema drift, secret scan — HTTP 200 is not healthy |
 
 ---
 
@@ -84,6 +85,28 @@ Find circular dependencies in the frontend
 Check coupling metrics in src/services
 ```
 
+```
+Check MCP health on https://example.com/mcp
+```
+
+### Remote MCP protocol health (not HTTP uptime)
+
+A remote MCP endpoint can return **HTTP 200** while `initialize`, `tools/list`,
+or the SSE stream fails. CodeSentinel probes the protocol itself:
+
+- Synthetic Streamable HTTP / legacy SSE handshake (`initialize` + `tools/list`)
+- Canonical tool-schema hash and drift alarms
+- Discovery-latency metrics
+- Secret scanning of tool descriptions/schemas before they enter agent context
+
+```bash
+npm test
+npm run mcp:health -- https://example.com/mcp
+```
+
+Library: `src/lib/mcp-health`. Analyzer: `lib/analyzers/mcp-health.js`.
+Full write-up: [`docs/mcp-health.md`](docs/mcp-health.md).
+
 ### Daytona sandbox scans (optional)
 
 Set `DAYTONA_API_KEY` (and optionally `GITHUB_TOKEN` for private repos). MCP tools and Slack analysis will shallow-clone GitHub URLs in a Daytona VM and return live import-graph findings instead of demo data.
@@ -115,11 +138,12 @@ Add the Slack app manifest, enable Agent Builder, and @CodeHealth in any channel
 │  🔧 detect_architectural_drift           │
 │  🔧 full_health_scan                     │
 │  🔧 explain_finding                      │
+│  🔧 check_mcp_health                     │
 │                                          │
 │  ┌──────────────────────────────────┐    │
 │  │       Analysis Engine            │    │
 │  │  dead-code | circular-deps       │    │
-│  │  coupling | drift                │    │
+│  │  coupling | drift | mcp-health   │    │
 │  └──────────────────────────────────┘    │
 │                                          │
 │  ┌──────────────────────────────────┐    │
@@ -209,10 +233,14 @@ codehealth-mcp/
 │   ├── intent-parser.js      # NLP intent classification
 │   ├── block-kit-builder.js  # Rich Slack UI
 │   ├── llm-provider.js       # Multi-provider LLM
-│   └── analyzers/            # dead-code, circular-deps, coupling, drift
+│   └── analyzers/            # dead-code, circular-deps, coupling, drift, mcp-health
+├── src/lib/
+│   ├── resilience/           # safeFetch / retry
+│   └── mcp-health/           # handshake, schema hash, secret scan, CLI
 ├── mcp-server/
-│   ├── index.js              # MCP server with 6 tools
+│   ├── index.js              # MCP server (code analyzers + check_mcp_health)
 │   └── package.json
+├── test/                     # handshake / drift / secret-scan tests
 └── functions/                # Slack function definitions
 ```
 
