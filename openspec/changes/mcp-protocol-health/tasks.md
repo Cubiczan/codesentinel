@@ -4,4 +4,4 @@
 - [x] Add analyzer + Slack intent + MCP tool `check_mcp_health`
 - [x] Document uptime vs protocol health and entrypoints
 - [x] Tests: HTTP 200 handshake failure, schema drift, secret-in-description
-- [ ] `npm test` passes
+- [x] `npm test` passes

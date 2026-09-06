@@ -129,6 +129,43 @@ describe("MCP handshake health", () => {
     }
   });
 
+  it("completes a legacy HTTP+SSE handshake via the endpoint event", async () => {
+    const fixture = await listen(async (req, res) => {
+      const url = new URL(req.url, `http://${req.headers.host}`);
+      if (req.method === "GET" && url.pathname === "/mcp") {
+        res.writeHead(200, { "content-type": "text/event-stream" });
+        res.end("event: endpoint\ndata: /messages?session=legacy\n\n");
+        return;
+      }
+      if (req.method === "POST" && url.pathname === "/messages") {
+        const body = await readJson(req);
+        if (body.method === "initialize") {
+          sendJson(res, 200, { jsonrpc: "2.0", id: body.id, result: initializeResult() });
+          return;
+        }
+        if (body.method === "notifications/initialized") {
+          handleInitialized(res);
+          return;
+        }
+        if (body.method === "tools/list") {
+          sendJson(res, 200, { jsonrpc: "2.0", id: body.id, result: { tools: SAMPLE_TOOLS } });
+          return;
+        }
+      }
+      res.writeHead(404);
+      res.end();
+    });
+
+    try {
+      const result = await checkMcpHealth(fixture.url, { timeoutMs: 2000, transport: "sse" });
+      assert.equal(result.protocolHealthy, true);
+      assert.equal(result.transport, "sse");
+      assert.equal(result.schema.toolCount, 1);
+    } finally {
+      await fixture.close();
+    }
+  });
+
   it("accepts tools/list delivered as SSE events after initialize", async () => {
     const fixture = await listen(async (req, res) => {
       const body = req.method === "POST" ? await readJson(req) : {};
