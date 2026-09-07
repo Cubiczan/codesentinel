@@ -8,8 +8,16 @@ HTTP mode is **stateless** (`sessionIdGenerator: undefined`, new server +
 transport per POST, JSON responses by default). That matches Vercel’s
 multi-instance model — no sticky sessions.
 
-Do **not** invent a hostname. Use the platform URL (`VERCEL_PROJECT_PRODUCTION_URL`
-or your Fly/Railway host).
+**Live production:** [https://codesentinel-rho.vercel.app](https://codesentinel-rho.vercel.app)
+
+| Path | URL |
+|------|-----|
+| MCP | `https://codesentinel-rho.vercel.app/mcp` |
+| Health | `https://codesentinel-rho.vercel.app/health` |
+
+Auth is fail-closed Bearer via `MCP_BEARER_TOKEN` (Vercel env + client env). Never
+commit the token. Self-hosted or preview deploys still use the platform URL
+(`VERCEL_PROJECT_PRODUCTION_URL`, `MCP_HTTP_HOST`, or your Fly/Railway host).
 
 ## Local run
 
@@ -71,36 +79,56 @@ npx vercel --prod
 | `GITHUB_TOKEN` | no | Private repo fetch |
 | `MCP_HTTP_PATH` | no | Default `/mcp` |
 
-Public URLs (from Vercel, not this repo):
+Public URLs for this production deploy:
 
-- MCP: `https://$VERCEL_PROJECT_PRODUCTION_URL/mcp`
-- Health: `https://$VERCEL_PROJECT_PRODUCTION_URL/health`
+- MCP: `https://codesentinel-rho.vercel.app/mcp`
+- Health: `https://codesentinel-rho.vercel.app/health`
+
+Preview / other Vercel projects: `https://$VERCEL_PROJECT_PRODUCTION_URL/mcp`
+and `https://$VERCEL_PROJECT_PRODUCTION_URL/health` (`VERCEL_URL` for a
+specific deployment).
 
 Disable **Deployment Protection** (Vercel Authentication) on production.
 Glama’s health check must reach `/mcp` with only your Bearer header.
 
 ## Glama connector — exact fields
 
-After the Vercel production URL exists, Add MCP Server → **Connector**:
+Add MCP Server → **Connector** against the live production host:
 
 | Field | What to enter |
 |-------|----------------|
 | Name | CodeSentinel |
 | Description | Codebase health: dead code, circular deps, coupling, drift |
-| Server URL | `https://$VERCEL_PROJECT_PRODUCTION_URL/mcp` |
+| Server URL | `https://codesentinel-rho.vercel.app/mcp` |
 | Transport | `streamable-http` (not stdio, not legacy SSE) |
 | Authentication | API Key |
 | Header name | `Authorization` |
-| Header value | `Bearer $MCP_BEARER_TOKEN` (same secret as the Vercel env) |
+| Header value | `Bearer $MCP_BEARER_TOKEN` (same secret as the Vercel env — never commit the token) |
 
-Client snippet (replace the host from Vercel):
+Production client snippet (live host + env token):
 
 ```json
 {
   "mcpServers": {
     "codesentinel": {
       "type": "streamable-http",
-      "url": "https://${VERCEL_PROJECT_PRODUCTION_URL}/mcp",
+      "url": "https://codesentinel-rho.vercel.app/mcp",
+      "headers": {
+        "Authorization": "Bearer ${MCP_BEARER_TOKEN}"
+      }
+    }
+  }
+}
+```
+
+Self-hosted / preview (host from env):
+
+```json
+{
+  "mcpServers": {
+    "codesentinel": {
+      "type": "streamable-http",
+      "url": "https://${MCP_HTTP_HOST}/mcp",
       "headers": {
         "Authorization": "Bearer ${MCP_BEARER_TOKEN}"
       }

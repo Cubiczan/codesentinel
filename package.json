@@ -2,6 +2,7 @@
   "name": "@cubiczan/codesentinel-mcp",
   "version": "1.0.0",
   "description": "CodeSentinel — AI-powered codebase health agent for Slack",
+  "homepage": "https://codesentinel-rho.vercel.app",
   "mcpName": "io.github.Cubiczan/codesentinel",
   "main": "app.js",
   "bin": {
