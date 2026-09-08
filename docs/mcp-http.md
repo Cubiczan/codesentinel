@@ -77,6 +77,7 @@ Public URLs (from Vercel, not this repo):
 
 - MCP: `https://$VERCEL_PROJECT_PRODUCTION_URL/mcp`
 - Health: `https://$VERCEL_PROJECT_PRODUCTION_URL/health`
+- Glama claim (unauthenticated): `https://$VERCEL_PROJECT_PRODUCTION_URL/.well-known/glama.json`
 
 Disable **Deployment Protection** (Vercel Authentication) on production.
 Glama’s health check must reach `/mcp` with only your Bearer header.
@@ -94,6 +95,7 @@ After the Vercel production URL exists, Add MCP Server → **Connector**:
 | Authentication | API Key |
 | Header name | `Authorization` |
 | Header value | `Bearer $MCP_BEARER_TOKEN` (same secret as the Vercel env) |
+| Ownership claim | Served at `/.well-known/glama.json` (no auth; not rewritten to `/api`) |
 
 Client snippet (replace the host from Vercel):
 
