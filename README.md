@@ -117,6 +117,7 @@ Turn **off** Vercel Deployment Protection on the production host, or Glama/clien
 | Auth | API Key / Bearer |
 | Header | `Authorization` |
 | Header value | `Bearer $MCP_BEARER_TOKEN` (same secret as the Vercel env) |
+| Ownership claim | `https://$VERCEL_PROJECT_PRODUCTION_URL/.well-known/glama.json` (static `public/` file) |
 
 See [`docs/mcp-http.md`](docs/mcp-http.md) for Vercel env vars, Fluid Compute notes, and Docker/Fly fallback.
 
