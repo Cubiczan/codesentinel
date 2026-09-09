@@ -15,7 +15,7 @@ output path, which is why the previous rewrite existed.
 
 ## Claim token
 
-Keep `glama_claim_vHBifndeHSeABPgFxW6qzO0hrCpYEb3i`. Copies must stay
+Keep `glama_claim_vHBifndeHSeABPgFxW6qzOohrCpYEb3i`. Copies must stay
 byte-equivalent JSON (pretty, two-space indent, same keys) so verify and
 tests cannot drift.
 

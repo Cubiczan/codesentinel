@@ -9,7 +9,7 @@ Unauthenticated Glama ownership claim for the hosted MCP connector.
 The Vercel deployment SHALL serve `/.well-known/glama.json` as a static file
 from `public/.well-known/glama.json` with `outputDirectory` set to `public`.
 The body SHALL be the Glama connector schema plus the current claim token
-`glama_claim_vHBifndeHSeABPgFxW6qzO0hrCpYEb3i`. The path SHALL NOT be
+`glama_claim_vHBifndeHSeABPgFxW6qzOohrCpYEb3i`. The path SHALL NOT be
 implemented as a rewrite to `/glama.json` or `/api`.
 
 #### Scenario: Claim JSON is published under public/.well-known
@@ -17,7 +17,7 @@ implemented as a rewrite to `/glama.json` or `/api`.
 - **GIVEN** the repository on the Vercel-deployed revision
 - **WHEN** `public/.well-known/glama.json` is read
 - **THEN** it parses to `$schema` `https://glama.ai/mcp/schemas/connector.json`
-  and `claim` `glama_claim_vHBifndeHSeABPgFxW6qzO0hrCpYEb3i`
+  and `claim` `glama_claim_vHBifndeHSeABPgFxW6qzOohrCpYEb3i`
 
 #### Scenario: vercel.json does not rewrite well-known
 

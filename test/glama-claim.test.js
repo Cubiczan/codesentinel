@@ -6,7 +6,7 @@ const path = require("node:path");
 const ROOT = path.join(__dirname, "..");
 const EXPECTED = {
   $schema: "https://glama.ai/mcp/schemas/connector.json",
-  claim: "glama_claim_vHBifndeHSeABPgFxW6qzO0hrCpYEb3i",
+  claim: "glama_claim_vHBifndeHSeABPgFxW6qzOohrCpYEb3i",
 };
 
 const CLAIM_FILES = [
